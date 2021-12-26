@@ -1,38 +1,109 @@
-.App {
-  text-align: center;
+* {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  box-sizing:border-box;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.game {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  position: relative;
+  width: 700px;
+  height: 700px;
+}
+.green {
+  background-color: #66bb6a;
+}
+.red {
+  background-color: #e53935;
+  border: none;
+}
+.yellow {
+  background-color: #ffe600;
+  border: none;
+}
+.blue {
+  background-color: #29b6f6;
+  border: none;
 }
 
-.App-link {
-  color: #61dafb;
+.house {
+  display: inline-block;
+  position: absolute;
+  width:40%;
+  height:40%;
+  padding:7%;
+}
+.box {
+  position: relative;
+  width:100%;
+  height:100%;
+  background-color:white;
+  padding:20%;
+}
+.square {
+  position: absolute;
+  width:25%;
+  height:25%;
+
+}
+.square-one {
+  top:20%;
+  left:20%;
+}
+.square-two {
+  top: 20%;
+  right: 20%;
+}
+.square-three {
+  bottom: 20%;
+  left: 20%;
+}
+.square-four {
+  bottom: 20%;
+  right: 20%;
+}
+.home {
+  position: absolute;
+  top:40%;
+  left: 40%;
+  width: 20%;
+  height: 20%;
+  border-bottom: 20px solid #e53935;
+  border-top: 20px solid #ffe600;
+  border-left: 20px solid #66bb6a;
+  border-right: 20px solid #29b6f6;
+}
+.cells {
+  position: absolute;
+  width: 6.66% ;
+  height: 6.66%;
+  border-collapse: collapse;
+  border: 1px solid #e5e5e569 ;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.safe {
+  background-color: #99999938;
+  -webkit-clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+.g-start {
+  background-color: #66bb6a;
+
+}
+.y-start {
+  background-color: #ffe600;
+
+}
+.r-start {
+  background-color: #e53935;
+
+}
+.b-start {
+  background-color: #29b6f6;
+}
+.disabled{
+  background-color: grey;
 }
