@@ -107,3 +107,50 @@
 .disabled{
   background-color: grey;
 }
+
+
+html {
+  height:100%;
+}
+
+body {
+  margin:0;
+}
+
+.bg1 {
+  animation:slide 3s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, rgb(240, 223, 223) 50%, rgb(231, 230, 230) 50%);
+  bottom:0;
+  left:-50%;
+  opacity:.5;
+  position:fixed;
+  right:-50%;
+  top:0;
+  z-index:-1;
+}
+
+.bg2 {
+  animation-direction:alternate-reverse;
+  animation-duration:4s;
+}
+
+.bg3 {
+  animation-duration:5s;
+}
+.animate-color{
+  background-image: -webkit-radial-gradient(-60deg, rgb(3, 3, 3) 50%, rgb(233, 233, 233) 50%);
+  bottom:0;
+
+}
+
+
+
+@keyframes slide {
+  0% {
+    transform:translateX(-25%);
+  }
+  100% {
+    transform:translateX(25%);
+  }
+}
+

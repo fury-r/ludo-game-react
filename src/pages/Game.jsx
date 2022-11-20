@@ -10,78 +10,10 @@ const Game = () => {
   const [show, setshow] = useState(false);
   const [showTimer, setShowtimer] = useState(false);
   const [showDialog, setshowDialog] = useState(false);
-
-  const [disabled, setDisabled] = useState(false);
-  const [timer, setTimer] = useState(0);
-  const [gamedata, setGameData] = useState([]);
-  const [showWinner, setshowWinner] = useState(false);
-  const [showWinnerMessage, setshowWinnerMessage] = useState({
-    color: "",
-    message: "",
-  });
-
-  useEffect(() => {
-    let data = JSON.parse(localStorage.getItem("game"));
-    console.log(data);
-
-    if (data) {
-      console.log(data);
-      setGameData(data);
-      setshowDialog(true);
-    }
-  }, []);
-
-  const Save = () => {
-    let data = JSON.parse(localStorage.getItem("game"));
-    let id = 1;
-    if (!data) {
-      let data = [{ game: game, id: 1 }];
-      localStorage.setItem("game", JSON.stringify(data));
-    } else {
-      let id = data[data.length - 1].id + 1;
-      console.log("ee", id);
-      data.push({ game: game, id: id });
-      localStorage.setItem("game", JSON.stringify(data));
-    }
-    alert("Game Saved " + id);
-  };
-
-  const colorStyle = {
-    green: "border-white	 rounded-full p-1 mr-1  text-white bg-green-700",
-    red: " border-white	 rounded-full p-1 mr-1   text-white bg-red-700",
-    yellow: "border-white	rounded-full p-1 mr-1  bg-yellow-500 text-white ",
-    blue: "border-white	 rounded-full p-1 mr-1   bg-blue-500 text-white ",
-  };
-
-  const checkWinner = () => {
-    if (game.players.green.points == 4) {
-      setshowWinnerMessage({
-        color: "green",
-        message: "Player 1 has won.",
-      });
-      setshowWinner(true);
-    } else if (game.players.yellow.points == 4) {
-      setshowWinnerMessage({
-        color: "yellow",
-        message: "Player 2 has won.",
-      });
-      setshowWinner(true);
-    } else if (game.players.red.points == 4) {
-      setshowWinnerMessage({
-        color: "red",
-        message: "Player 3 has won.",
-      });
-      setshowWinner(true);
-    } else if (game.players.blue.points == 4) {
-      setshowWinnerMessage({
-        color: "blue",
-        message: "Player 4 has won.",
-      });
-      setshowWinner(true);
-    }
-  };
+  const [show1, setshow1] = useState(false);
+  const [count,setCount]=useState(4)
   const [game, setGame] = useState({
-    dice: 5,
+    dice: 0,
     prevroll: 0,
     safe: [1, 14, 40, 27, 9, 22, 48, 35],
     players: {
@@ -199,7 +131,206 @@ const Game = () => {
     ],
     queue: ["green", "yellow", "blue", "red"],
   });
-  useEffect(() => {}, []);
+  const [disabled, setDisabled] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [gamedata, setGameData] = useState([]);
+  const [showWinner, setshowWinner] = useState(false);
+  const [showWinnerMessage, setshowWinnerMessage] = useState({
+    color: "",
+    message: "",
+  }); 
+
+  useEffect(() => {
+    let data = JSON.parse(localStorage.getItem("game"));
+    console.log(data);
+
+    if (data) {
+      console.log(data);
+      setGameData(data);
+      setshowDialog(true);
+      return 0
+    }
+    else{
+      setshow1(true)
+    }
+  }, []);
+  const removeWinner=(value)=>{
+    let queue=game.queue
+    queue.splice(0,1)
+    game.queue=queue
+    setGame(game)
+    console.log(game)
+  }
+  const Save = () => {
+    let data = JSON.parse(localStorage.getItem("game"));
+    let id = 1;
+    if (!data) {
+      let data = [{ game: game, id: 1 }];
+      localStorage.setItem("game", JSON.stringify(data));
+    } else {
+      let id = data[data.length - 1].id + 1;
+      console.log("ee", id);
+      data.push({ game: game, id: id });
+      localStorage.setItem("game", JSON.stringify(data));
+    }
+    alert("Game Saved " + id);
+  };
+
+  const colorStyle = {
+    green: "border-white	 rounded-full p-1 mr-1  text-white bg-green-700",
+    red: " border-white	 rounded-full p-1 mr-1   text-white bg-red-700",
+    yellow: "border-white	rounded-full p-1 mr-1  bg-yellow-500 text-white ",
+    blue: "border-white	 rounded-full p-1 mr-1   bg-blue-500 text-white ",
+  };
+  const reset=()=>{
+    setGame({
+      dice: 0,
+      prevroll: 0,
+      safe: [1, 14, 40, 27, 9, 22, 48, 35],
+      players: {
+        green: {
+          house: [1, 2, 3, 4],
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+          safe: 22,
+          zone: 51,
+          start: 1,
+          out: [],
+          path: [[], [], [], [], []],
+          points: 0,
+        },
+        yellow: {
+          house: [1, 2, 3, 4],
+          safe: 48,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+  
+          zone: 12,
+          start: 14,
+          out: [],
+          path: [[], [], [], [], []],
+          points: 0,
+        },
+        red: {
+          house: [1, 2, 3, 4],
+          safe: 35,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+  
+          zone: 38,
+          start: 40,
+          out: [],
+          path: [[], [], [], [], []],
+          points: 0,
+        },
+        blue: {
+          house: [1, 2, 3, 4],
+          safe: 9,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+  
+          zone: 25,
+          start: 27,
+          out: [],
+          points: 0,
+  
+          path: [[], [], [], [], []],
+        },
+      },
+      board: [
+        0,
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+      ],
+      queue: ["green", "yellow", "blue", "red"],
+    })
+    PlayerCount(count)
+  }
+   const checkWinner =async () => {
+
+    if (game.players.green.points == 4 && game.queue.includes('green')) {
+
+
+
+      setshowWinner(true);
+      removeWinner()
+    } else if (game.players.yellow.points == 4  && game.queue.includes('yellow')) {
+      setshowWinnerMessage({
+        color: "yellow",
+        message: "Player 2 has won.",
+      });
+      setshowWinner(true);
+    } else if (game.players.red.points == 4  && game.queue.includes('red')) {
+
+      setshowWinner(true);
+      removeWinner()
+
+    } else if (game.players.blue.points == 4  && game.queue.includes('blue')) {
+
+      setshowWinner(true);
+      removeWinner()
+
+    }
+  };
+ 
   const MoveFromHouse = (e) => {
     let pawn = e.target.id;
     pawn = pawn.split("-");
@@ -222,11 +353,17 @@ const Game = () => {
         dice: 6,
       }));
       console.log(game, game.board[1], "eeee", parseInt(pawn[1]));
+
     }
-    ChangeQueue();
+    else if(pawn[0]==game.queue[0])
+    {
+      ChangeQueue();
+
+    }
   };
   const winningPath = (e) => {
     let pawn = e.target.id;
+    let flag=false
     pawn = pawn.split("-");
     console.log("in", game, pawn, e.target.id);
     if (game.queue[0] == pawn[0]) {
@@ -234,12 +371,26 @@ const Game = () => {
         if (pawn[2] == "null") {
           let players = game.players;
           let board = game.board;
-          board[players[pawn[0]].start].splice(
-            board[players[pawn[0]].start].indexOf({
-              color: pawn[0],
-              number: pawn[1],
-            })
-          );
+          let index=0
+          let x=0
+          let f=false
+          let search=players[pawn[0]].zone
+          board[search].map((e)=>{
+            if (e.color==pawn[0] &&e.number==pawn[1])
+            {
+              f=true
+              index=x
+              console.log('in')
+  
+            }
+            x+=1
+          })
+          if (f){
+            board[players[pawn[0]].zone].splice(
+              index,1
+             );
+          }
+        
           players[pawn[0]].path[0].push({ color: pawn[0], number: pawn[1] });
           let d = game.dice - 1;
           game.dice = d;
@@ -267,13 +418,29 @@ const Game = () => {
             let j = 1;
             for (let i = 1; i <= game.dice; i++) {
               let way = game.players;
-
-              way[pawn[0]].path[current_pos].splice(
-                way[pawn[0]].path[current_pos].indexOf(e),
-                1
-              );
+              let index=0
+              let x=0
+              let f=false
+              let search=current_pos
+              way[pawn[0]].path[current_pos].map((e)=>{
+                if (e.color==pawn[0] &&e.number==pawn[1])
+                {
+                  f=true
+                  index=x
+                  console.log('in')
+      
+                }
+                x+=1
+              })
+              if (f){
+                way[pawn[0]].path[current_pos].splice(
+                  index,
+                  1
+                );
+                }
 
               if (current_pos + j == 5) {
+                flag=true
                 console.log("points");
                 way[pawn[0]].points += 1;
                 setGame((prev) => ({
@@ -281,17 +448,8 @@ const Game = () => {
                   players: way,
                 }));
                 checkWinner();
-                return 0;
               } else {
-                console.log(
-                  game,
-                  "-------------",
-                  current_pos,
-                  j,
-                  pawn[2],
-                  data.path.length
-                );
-
+      
                 way[pawn[0]].path[current_pos + j].push({
                   color: pawn[0],
                   number: pawn[1],
@@ -305,13 +463,39 @@ const Game = () => {
           } else {
             alert("Move Not Possible");
           }
-        }
-      }
-    }
-    ChangeQueue();
+          console.log(flag,'------flag')
 
-    console.log("in");
+        }
+
+      }
+      if(!flag){
+        ChangeQueue();
+        
+      }
+      else{
+        setDisabled(false)
+      }
+
+    }
+
+    console.log("exit");
   };
+  const PlayerCount=(e)=>{
+    setCount(e)
+    let queue=game.queue
+    let n=game.queue.length-e
+    if(n>0){
+      for(let i=0;i<n;i++){
+        queue.splice(0,1)
+      }
+      game.queue=queue
+      setGame(game)
+    }
+ 
+
+    
+
+  }
   const ChangeQueue = () => {
     let main = game.queue;
     if (game.prevroll == 6) {
@@ -403,7 +587,7 @@ const Game = () => {
                 console.log(safe, pos, e);
                 if (pos != safe) {
                   player[e.color][parseInt(e.number)] = false;
-
+                  flag=1
                   console.log("remove");
                   player[e.color].house.push(parseInt(e.number));
                   board[current_pos + j].splice(
@@ -420,17 +604,32 @@ const Game = () => {
             });
           }
         }
+        let index=0
+        let f=false
+        let x=0
+        let search=current_pos!=0?current_pos:52
+        board[search].map((e)=>{
+          if (e.color==pawn[0] &&e.number==pawn[1])
+          {
+            index=x
+            f=true
+            console.log('in')
 
-        board = game.board;
+          }
+          x+=1
+        })
+        console.log(current_pos,'pos',index,search,game.board[search])
+          if (f)
+{        board = game.board;
         current_pos != 0
           ? board[current_pos].splice(
-              board[current_pos].indexOf({ color: pawn[0], number: pawn[1] }),
+              index,
               1
             )
           : board[52].splice(
-              board[52].indexOf({ color: pawn[0], number: pawn[1] }),
+              index,
               1
-            );
+            );}
         board[current_pos + j].push({ color: pawn[0], number: pawn[1] });
         if (current_pos == game.players[pawn[0]].zone) {
           console.log("in");
@@ -449,7 +648,14 @@ const Game = () => {
         }));
       }
       console.log("queueChange");
-      ChangeQueue();
+      if (flag==0)
+      {
+        ChangeQueue();
+
+      }
+      else{
+        setDisabled(false)
+      }
     }
   };
   const Roll = (e) => {
@@ -460,20 +666,21 @@ const Game = () => {
       dice: e,
       prevroll: e,
     }));
-    setTimer(10);
     setShowtimer(true);
-    setTimeout(() => {
-      setTimer(timer - 1);
-    }, 1000);
+
   };
   return (
-    <>
+    <div className="content" styles={{overflowY:'scroll'}}>
+<div class="bg1"></div>
+<div class="bg1 bg2"></div>
+<div class="bg1 bg3"></div>
       <div
-        className="  mt-6 back "
+        className="  mt-6 back  "
         style={{ flex: 1, flexDirection: "column" }}
       >
-        <Row className="flex flex-row justify-center">
-          <label className="font-sans italic font-bold text-8xl p-4 rounded-md text-white bg-gradient-to-r   from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ">
+      
+        <Row className="flex flex-row justify-center animate-color">
+          <label className="font-sans italic font-bold text-8xl p-4 rounded-md  text-white bg-gradient-to-r   from-green-400 to-blue-500 hover:from-red-500 hover:to-yellow-500 ">
             Ludo
           </label>
         </Row>
@@ -741,7 +948,7 @@ const Game = () => {
             </div>
 
             <Button className="home"></Button>
-            <div className="cells" style={{ top: "40%" }}>
+            <div className="cells bg-white" style={{ top: "40%" }}>
               {game.board[52].length > 0
                 ? game.board[52].map((e) => {
                     return (
@@ -779,7 +986,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[2]}
               style={{ top: "40%", left: "13.32%" }}
             >
@@ -800,7 +1007,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[3]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "40%", left: "19.98%" }}
             >
               {game.board[3].length > 0
@@ -820,7 +1027,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[4]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "40%", left: "26.64%" }}
             >
               {game.board[4].length > 0
@@ -840,7 +1047,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[5]}
-              className="cells  "
+              className="cells bg-white  "
               style={{ top: "40%", left: "33.64%" }}
             >
               {game.board[5].length > 0
@@ -861,7 +1068,7 @@ const Game = () => {
 
             <div
               value={game.board[11]}
-              className="cells   "
+              className="cells  bg-white "
               style={{ top: 0, left: "40%" }}
             >
               {game.board[11].length > 0
@@ -881,7 +1088,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[10]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "6.66%", left: "40%" }}
             >
               {game.board[10].length > 0
@@ -921,7 +1128,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[8]}
-              className="cells"
+              className="cells bg-white"
               style={{ top: "19.98%", left: "40%" }}
             >
               {game.board[8].length > 0
@@ -941,7 +1148,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[7]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "26.64%", left: "40%" }}
             >
               {game.board[7].length > 0
@@ -960,7 +1167,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells  "
+              className="cells bg-white  "
               value={game.board[6]}
               style={{ top: "33.3%", left: "40%" }}
             >
@@ -980,7 +1187,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[12]}
               style={{ top: 0, left: "46.66%" }}
             >
@@ -1096,7 +1303,7 @@ const Game = () => {
             </div>
 
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[13]}
               style={{ top: 0, left: "53.32%" }}
             >
@@ -1138,7 +1345,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[15]}
-              className="cells  "
+              className="cells bg-white  "
               style={{ top: "13.32%", left: "53.32%" }}
             >
               {game.board[15].length > 0
@@ -1157,7 +1364,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[16]}
               style={{ top: "19.98%", left: "53.32%" }}
             >
@@ -1177,7 +1384,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[17]}
               style={{ top: "26.64%", left: "53.32%" }}
             >
@@ -1197,7 +1404,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[18]}
               style={{ top: "33.3%", left: "53.32%" }}
             >
@@ -1218,7 +1425,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[19]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "40%", right: "33.3%" }}
             >
               {game.board[19].length > 0
@@ -1238,7 +1445,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[20]}
-              className="cells"
+              className="cells bg-white"
               style={{ top: "40%", right: "26.64%" }}
             >
               {game.board[20].length > 0
@@ -1258,7 +1465,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[21]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "40%", right: "19.98%" }}
             >
               {game.board[21].length > 0
@@ -1298,7 +1505,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[23]}
-              className="cells"
+              className="cells bg-white"
               style={{ top: "40%", right: "6.66%" }}
             >
               {game.board[23].length > 0
@@ -1318,7 +1525,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[24]}
-              className="cells"
+              className="cells bg-white"
               style={{ top: "40%", right: "0" }}
             >
               {game.board[24].length > 0
@@ -1433,7 +1640,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[25]}
               style={{ top: "46.66%", right: 0 }}
             >
@@ -1454,7 +1661,7 @@ const Game = () => {
             </div>
 
             <div
-              className="cells  "
+              className="cells bg-white  "
               style={{ top: "53.32%", right: "33.3%" }}
               value={game.board[31]}
             >
@@ -1474,7 +1681,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[30]}
               style={{ top: "53.32%", right: "26.64%" }}
             >
@@ -1494,7 +1701,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[29]}
               style={{ top: "53.32%", right: "19.98%" }}
             >
@@ -1514,7 +1721,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[28]}
               style={{ top: "53.32%", right: "13.32%" }}
             >
@@ -1556,7 +1763,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               style={{ top: "53.32%", right: "0" }}
               value={game.board[26]}
             >
@@ -1577,7 +1784,7 @@ const Game = () => {
             </div>
 
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[37]}
               style={{ bottom: 0, left: "53.32%" }}
             >
@@ -1597,7 +1804,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[36]}
               style={{ bottom: "6.66%", left: "53.32%" }}
             >
@@ -1637,7 +1844,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[34]}
               style={{ bottom: "19.98%", left: "53.32%" }}
             >
@@ -1657,7 +1864,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[33]}
               style={{ bottom: "26.64%", left: "53.32%" }}
             >
@@ -1677,7 +1884,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells "
+              className="cells bg-white "
               value={game.board[32]}
               style={{ bottom: "33.3%", left: "53.32%" }}
             >
@@ -1699,7 +1906,7 @@ const Game = () => {
 
             <div
               value={game.board[38]}
-              className="cells "
+              className="cells bg-white "
               style={{ bottom: 0, left: "46.66%" }}
             >
               {game.board[38].length > 0
@@ -1816,7 +2023,7 @@ const Game = () => {
 
             <div
               value={game.board[39]}
-              className="cells  "
+              className="cells bg-white  "
               style={{ bottom: 0, left: "40%" }}
             >
               {game.board[39].length > 0
@@ -1857,7 +2064,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[41]}
-              className="cells "
+              className="cells bg-white "
               style={{ bottom: "13.32%", left: "40%" }}
             >
               {game.board[41].length > 0
@@ -1876,7 +2083,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[42]}
               style={{ bottom: "19.98%", left: "40%" }}
             >
@@ -1897,7 +2104,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[43]}
-              className="cells"
+              className="cells bg-white"
               style={{ bottom: "26.64%", left: "40%" }}
             >
               {game.board[43].length > 0
@@ -1918,7 +2125,7 @@ const Game = () => {
 
             <div
               value={game.board[44]}
-              className="cells  "
+              className="cells bg-white  "
               style={{ bottom: "33.3%", left: "40%" }}
             >
               {game.board[44].length > 0
@@ -1938,7 +2145,7 @@ const Game = () => {
             </div>
 
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[45]}
               style={{ top: "53.32%", left: "33.3%" }}
             >
@@ -1959,7 +2166,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[46]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "53.32%", left: "26.64%" }}
             >
               {game.board[46].length > 0
@@ -1979,7 +2186,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[47]}
-              className="cells"
+              className="cells bg-white"
               style={{ top: "53.32%", left: "19.98%" }}
             >
               {game.board[47].length > 0
@@ -2019,7 +2226,7 @@ const Game = () => {
             </div>
             <div
               value={game.board[49]}
-              className="cells "
+              className="cells bg-white "
               style={{ top: "53.32% ", left: "6.66%" }}
             >
               {game.board[49].length > 0
@@ -2039,7 +2246,7 @@ const Game = () => {
             </div>
 
             <div
-              className="cells  "
+              className="cells bg-white  "
               value={game.board[50]}
               style={{ top: "53.32%", left: 0 }}
             >
@@ -2155,7 +2362,7 @@ const Game = () => {
                 : ""}
             </div>
             <div
-              className="cells"
+              className="cells bg-white"
               value={game.board[51]}
               style={{ top: "46.66%", left: 0 }}
             >
@@ -2223,7 +2430,11 @@ const Game = () => {
             </Row>
           </div>
         </Row>
-        <Row className=" flex  m-5 justify-center">
+        <Row className=" flex   m-5 justify-center ">
+        <label className="font-bold text-xl text-gray-500">Click on the Dice to Play your turn</label>
+
+        </Row>
+        <Row className=" flex   m-5 justify-center ">
           <Dice size={60}  onRoll={(value) => Roll(value)} disabled={disabled} />
           {/* <Button
             onClick={() => {
@@ -2240,23 +2451,29 @@ const Game = () => {
             {game.dice}
           </label> */}
         </Row>
-        <Row className="flex justify-around">
-          <Button
-            onClick={() => {
-              Save();
-            }}
-            className=" bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center p-10"
-          >
-            Save Game
-          </Button>
-          <Button
+        <Row className="flex justify-around mt-5">
+        <button
             onClick={() => {
               localStorage.clear();
             }}
-            className=" bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center p-10"
-          >
-            Clear Saved Games
-          </Button>
+            class="bg-gray-600 hover:bg-gray-400 text-white hover:text-black  font-semibold py-2 px-4 border  rounded shadow"          >
+            Clear data
+          </button>
+          <button
+            onClick={() => {
+              Save();
+            }}
+            class="bg-green-800 hover:bg-green-500 text-white hover:text-black  font-semibold py-2 px-4 border  rounded shadow"          >
+            Save Game
+          </button>
+
+          <button
+            onClick={() => {
+              reset();
+            }}
+            class="bg-red-500 hover:bg-gray-100 text-white hover:text-black font-semibold py-2 px-4 border rounded shadow"          >
+            Reset
+          </button>
         </Row>
         <Row className="flex justify-center m-5">
           {game.queue[0] == "green" ? (
@@ -2271,17 +2488,24 @@ const Game = () => {
         </Row>
       </div>
       <div className="flex flex-row justify-center mb-5">
-        <CountdownCircleTimer
+        {/* <CountdownCircleTimer
           onComplete={() => {
             ChangeQueue();
             return [true, 100];
           }}
           size={100}
           isPlaying={showTimer}
-          duration={10}
+          duration={5}
           colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
-        />
-      </div>
+        /> */}
+        <Button
+            onClick={() => {
+             ChangeQueue()
+            }}
+            className=" bg-red-500 hover:bg-green-400 text-white hover:text-black font-bold py-2 px-4 rounded inline-flex items-center p-10"
+          >
+            Pass
+          </Button>      </div>
 
       <Transition.Root
         show={showWinner}
@@ -2289,13 +2513,12 @@ const Game = () => {
         className="m-4 flex justify-center"
       >
         <Dialog
-          as="Button"
           className="flex justify-center  z-10 inset-0 overflow-y-auto"
           onClose={() => {
             setshowWinner(false);
           }}
         >
-          <Button className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -2323,28 +2546,29 @@ const Game = () => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Button className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <Button className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <Button className="sm:flex sm:items-start">
-                    {showWinnerMessage.color == "green" ? (
-                      <Button className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-500 sm:mx-0 sm:h-10 sm:w-10"></Button>
-                    ) : showWinnerMessage.color == "yellow" ? (
-                      <Button className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-500 sm:mx-0 sm:h-10 sm:w-10"></Button>
-                    ) : showWinnerMessage.color == "red" ? (
-                      <Button className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-500 sm:mx-0 sm:h-10 sm:w-10"></Button>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    { game.players.green.points==4 ? (
+                      <label className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-500 sm:mx-0 sm:h-10 sm:w-10"></label>
+                    ) :game.players.yellow.points==4 ? (
+                      <label className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-500 sm:mx-0 sm:h-10 sm:w-10"></label>
+                    ) : game.players.red.points==4 ? (
+                      <label className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-500 sm:mx-0 sm:h-10 sm:w-10"></label>
                     ) : (
-                      <Button className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-500 sm:mx-0 sm:h-10 sm:w-10"></Button>
+                      <label className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-500 sm:mx-0 sm:h-10 sm:w-10"></label>
                     )}
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                      <Button className="mt-2">
+                      <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          {showWinner.message}
+                          Player has won.
+                          
                         </p>
-                      </Button>
+                      </div>
                     </div>
-                  </Button>
-                </Button>
-                <Button className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:ml-3 sm:w-auto sm:text-sm"
@@ -2352,16 +2576,15 @@ const Game = () => {
                   >
                     Okay
                   </button>
-                </Button>
-              </Button>
+                </div>
+              </div>
             </Transition.Child>
-          </Button>
+          </div>
         </Dialog>
       </Transition.Root>
-      <Transition.Root show={show} as={Fragment} className="flex-1">
+      <Transition.Root show={show} as={Fragment} >
         <Dialog
-          as="Button"
-          className="fixed z-10 inset-0 overflow-y-auto"
+          className="fixed  inset-10  flex flex-auto flex-row justify-center"
           onClose={() => {
             setshow(false);
           }}
@@ -2425,7 +2648,14 @@ const Game = () => {
                   <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={() => setshow(false)}
+                    onClick={() => {
+                          setGame((prevstate) => ({
+      ...prevstate,
+      dice: 0,
+      prevroll: 0,
+    }));
+    setshow(false)
+                    }}
                   >
                     Okay
                   </button>
@@ -2435,10 +2665,101 @@ const Game = () => {
           </Button>
         </Dialog>
       </Transition.Root>
-      <Transition.Root show={showDialog} as={Fragment} className="flex-1">
+      <Transition.Root show={show1} as={Fragment}>
         <Dialog
           as="Button"
-          className="fixed inset-50 overflow-y-auto"
+          className="fixed  inset-10   flex-auto flex-row justify-center"
+          onClose={() => {
+            setshow1(false);
+          }}
+        >
+          <Button className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            </Transition.Child>
+
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-lg leading-6 font-medium text-gray-900 mb-5 flex flex-row justify-center"
+                      >
+                        Player
+                      </Dialog.Title>
+                      <div className='flex-1 justify-evenly' >
+                      
+                            <button
+                              id='2'
+                              type="button"
+                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              onClick={() => {
+                                  PlayerCount(2)
+                                  setshow1(false);
+
+                              }}
+                            >
+                              2
+                            </button>
+                            <button
+                              id='3'
+                              type="button"
+                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              onClick={() => {
+                                  PlayerCount(3)
+                                  setshow1(false);
+
+                              }}
+                            >
+                              3
+                            </button>
+                            <button
+                              id='4'
+                              type="button"
+                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              onClick={() => {
+                                setshow1(false);
+                              }}
+                            >
+                              4
+                            </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Transition.Child>
+          </Button>
+        </Dialog>
+      </Transition.Root>
+      <Transition.Root show={showDialog} as={Fragment}>
+        <Dialog
+          as="Button"
+          className="fixed  inset-10   flex-auto flex-row justify-center"
           onClose={() => {
             setshowDialog(false);
           }}
@@ -2508,7 +2829,7 @@ const Game = () => {
           </Button>
         </Dialog>
       </Transition.Root>
-    </>
+    </div>
   );
 };
 export default Game;
