@@ -51,7 +51,7 @@
     ]
   },
   "devDependencies": {
-    "postcss": "^8.4.4",
+    "postcss": "^8.5.18",
     "stylelint-config-recommended": "^6.0.0"
   }
 }
